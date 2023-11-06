@@ -26,7 +26,7 @@ pip install selenium beautifulsoup4 pandas
 3. Run the script:
 
 ```bash
-python linkedin_email_scraping.ipynb
+python linkedin_email_scraping.py
 ```
 
 ## Note
