@@ -11,30 +11,14 @@ import json
 opt = webdriver.ChromeOptions()
 opt.add_argument("--disable-popup-blocking")
 
+EMAIL = ['gmail.com' , 'outlook.com', 'yahoo.com', 'hotmail.com']
+
 tags = [
+    # Put tags here
     "Affiliate Marketing",
     "Performance Marketing",
-    "Digital Marketing",
-    "Online Advertising",
-    "Content Marketing",
-    "Social Media Marketing",
-    "Search Engine Optimization (SEO)",
-    "Pay Per Click (PPC)",
-    "Email Marketing",
-    "Influencer Marketing",
-    "Partnership Marketing",
-    "E-commerce Marketing",
-    "Conversion Optimization",
-    "Lead Generation",
-    "Marketing Strategist",
-    "Marketing Director",
-    "Marketing Manager",
-    "Marketing Consultant",
-    "Marketing Agency",
-    "Marketing Expert"
+    # Add as many tags as possible.
 ]
-
-EMAIL = ['gmail.com' , 'outlook.com', 'yahoo.com', 'hotmail.com']
 
 country = 'us'
 
