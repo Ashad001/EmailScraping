@@ -48,10 +48,10 @@ class EmailProcessor:
 
                     if '@' in email and self.is_valid_email(email):
                         self.emails.add(email)
-                        row['Name'] = name  # Update the 'Name' field with the modified name
+                        row['Name'] = name 
                         self.valid_rows.append(row)
                     else:
-                        row['Name'] = name  # Update the 'Name' field with the modified name
+                        row['Name'] = name 
                         self.invalid_rows.append(row)
 
     def save_emails_to_file(self, rows, output_file_path):
