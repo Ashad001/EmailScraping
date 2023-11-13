@@ -1,10 +1,10 @@
 import os
 import pandas as pd
 
-csv_directory = r'E:\FifthSem\RAIN\messagingAutomation\csvs'
+csv_directory = r'.\csvs'
 csv_files = [file for file in os.listdir(csv_directory) if file.endswith('.csv')]
 print(csv_files)
-combined_data = pd.DataFrame(columns=["Country", "Tag", "Email"])
+combined_data = pd.DataFrame(columns=["Country", "Tag", "Name", "Email"])
 for csv_file in csv_files:
     file_path = os.path.join(csv_directory, csv_file)
     data = pd.read_csv(file_path)
