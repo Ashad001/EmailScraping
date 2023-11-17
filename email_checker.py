@@ -43,7 +43,6 @@ class EmailProcessor:
                 if email:
                     email = email.strip()
                     if email in self.emails:
-                        # Duplicate email, skip it
                         continue
 
                     if '@' in email and self.is_valid_email(email):
