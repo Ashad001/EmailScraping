@@ -55,9 +55,10 @@ class EmailProcessor:
 
     def save_emails_to_file(self, rows, output_file_path):
         with open(output_file_path, mode='w',encoding='utf-8', newline='') as file:
-            writer = csv.DictWriter(file, fieldnames=rows[0].keys())
-            writer.writeheader()
-            writer.writerows(rows)
+            if rows:
+                writer = csv.DictWriter(file, fieldnames=rows[0].keys())
+                writer.writeheader()
+                writer.writerows(rows)
 
     def process_and_save_emails(self):
         self.process_emails()
