@@ -43,7 +43,6 @@ platformdirs==3.11.0
 prompt-toolkit==3.0.39
 psutil==5.9.6
 pure-eval==0.2.2
-PyAutoGUI==0.9.54
 pycparser==2.21
 pycryptodomex==3.18.0
 pydantic==1.10.9

@@ -7,6 +7,9 @@ import time
 import pandas as pd
 import json
 
+if not os.path.exists('./csvs'):
+    os.mkdir('./csvs')
+
 opt = webdriver.ChromeOptions()
 opt.add_argument("--disable-popup-blocking")
 
