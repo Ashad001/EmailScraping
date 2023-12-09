@@ -44,13 +44,18 @@ class EmailProcessor:
                     email = email.strip()
                     if email in self.emails:
                         continue
-
-                    if '@' in email and self.is_valid_email(email):
+                    if '@' in email and '.com' in email and  self.is_valid_email(email):
+                        email = email.lower()
                         self.emails.add(email)
-                        row['Name'] = name 
+                        name = name.strip()
+                        if "," in name:
+                            name = name.split(',')[0].strip()
+                        if '"' in name:
+                            name = name.replace('"', '')
+                        row['Name'] = name  # Update the 'Name' field with the modified name
                         self.valid_rows.append(row)
                     else:
-                        row['Name'] = name 
+                        row['Name'] = name  # Update the 'Name' field with the modified name
                         self.invalid_rows.append(row)
 
     def save_emails_to_file(self, rows, output_file_path):
