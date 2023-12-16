@@ -28,8 +28,8 @@ opt.add_argument("--disable-popup-blocking")
 def send_email(receiver_email, subject, message):
     smtp_server = "smtp.gmail.com"
     smtp_port = 465
-    email_sender = 'ashadq345@gmail.com'
-    email_password = 'ifmlgrerqieqrlaf'
+    email_sender = 'EMAIL'
+    email_password = 'APP PASSWORD'
     msg = MIMEMultipart()
     msg["Subject"] = subject
     msg["From"] = email_sender
@@ -101,7 +101,7 @@ for TAG in tags:
         if captcha_present:
             subject = "Captcha Detected!"
             body = "Captcha detected on the website. Please check and solve it manually."
-            send_email("ashad001sp@gmail.com", subject, body)
+            send_email("SENDER EMAIL", subject, body)
             with open('captchas_file.txt', 'a', encoding='utf-8') as f:
                 f.write(f"{country.upper()} {TAG} {email_domain}\n")
                 f.write(page_source) 
