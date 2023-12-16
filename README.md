@@ -21,12 +21,10 @@ The script navigates through Google search results, looking for LinkedIn profile
 pip install selenium beautifulsoup4 pandas
 ```
 
-2. Download the appropriate [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/) for your system and place it in your PATH.
-
-3. Run the script:
+2. Run the script:
 
 ```bash
-python linkedin_email_scraping.py
+python main.py
 ```
 
 ## Note
