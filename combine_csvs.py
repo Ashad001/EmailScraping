@@ -7,7 +7,7 @@ def process_csv(file):
     data = pd.read_csv(file_path)
     return data
 
-csv_directory = r'E:\FifthSem\RAIN\messagingAutomation\usa_csvs'
+csv_directory = './csvs'
 csv_files = [file for file in os.listdir(csv_directory) if file.endswith('.csv')]
 print(csv_files)
 
