@@ -11,7 +11,7 @@ csv_directory = './csvs'
 csv_files = [file for file in os.listdir(csv_directory) if file.endswith('.csv')]
 print(csv_files)
 
-combined_data = pd.DataFrame(columns=["Country", "Tag", "Name", "Email"])
+combined_data = pd.DataFrame(columns=["State", "Tag", "Name", "Email"])
 
 with ThreadPoolExecutor() as executor:
     futures = [executor.submit(process_csv, file) for file in csv_files]
