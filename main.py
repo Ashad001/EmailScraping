@@ -2,6 +2,8 @@ import re
 import random
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import time
 import csv
@@ -36,7 +38,7 @@ opt.add_argument("--disable-popup-blocking")
 
 
 tags = [
-    # "High School Counselor",
+    "High School Counselor",
     "high school coach",
     "High school teacher",
     "High school advisor",
@@ -67,7 +69,7 @@ usa_states = ["Alabama", "Alaska", "Arizona", "Arkansas", "California",  "Colora
 
 # country = 'in'
 
-driver = webdriver.Chrome(options=opt)
+driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=opt)
 
 if not os.path.exists('./csvs'):
     os.mkdir('./csvs')
