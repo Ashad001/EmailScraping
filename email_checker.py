@@ -1,5 +1,7 @@
 import csv
 import re
+import os
+from CREDS import FOLDER_NAME
 
 class EmailProcessor:
     def __init__(self, input_file_path, valid_output_file_path, invalid_output_file_path):
@@ -71,9 +73,20 @@ class EmailProcessor:
         self.save_emails_to_file(self.invalid_rows, self.invalid_output_file_path)
 
 if __name__ == '__main__':
-    input_file = 'combined_email_data.csv'
-    valid_output_file = 'emails.csv'
-    invalid_output_file = 'invalid_emails.csv'
+    
+    if not os.path.exists("combined_csvs"):
+        os.makedirs("combined_csvs")
+    
+    if not os.path.exists("valid_csvs"):
+        os.makedirs("valid_csvs")
+        
+    if not os.path.exists("invalid_csvs"):
+        os.makedirs("invalid_csvs")    
+    DIR = "./combined_csvs/" + FOLDER_NAME
+    
+    input_file = "./combined_csvs/" + FOLDER_NAME + '/combined_email_data.csv'
+    valid_output_file = "./valid_csvs/" + f'/{FOLDER_NAME}_valid_emails.csv'
+    invalid_output_file = "./invalid_csvs/" + f'/{FOLDER_NAME}_invalid_emails.csv'
 
     processor = EmailProcessor(input_file, valid_output_file, invalid_output_file)
     processor.process_and_save_emails()

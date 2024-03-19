@@ -1,0 +1,60 @@
+# Compiled Python files
+*.pyc
+__pycache__/
+
+# secret files for keys
+constants.py
+
+# Distribution / packaging
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Local development settings
+/.vscode/
+.idea/
+*.pydevproject
+
+# Python virtual environments
+venv/
+env/
+.pipenv/
+
+# Jupyter Notebook temporary files
+.ipynb_checkpoints/
+
+# Logs
+*.log
+logs/
+
+# User-specific settings
+/.env
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Editor-specific files
+*.sublime-project
+*.sublime-workspace
+
+# Visual Studio Code settings
+.vscode/
+
+# private files
+CREDS.py 
+
+
+# private folders
+combined_csvs/
+csvs/
+invalid_csvs/
+valid_csvs/
+csvs/
+logs/
+driveconnecterapp-93a42bc009a2.json

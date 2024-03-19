@@ -15,6 +15,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import time
 import os
+from CREDS import FOLDER_NAME
 
 def send_email(receiver_email, subject, message):
     smtp_server = "smtp.gmail.com"
@@ -26,7 +27,7 @@ def send_email(receiver_email, subject, message):
     msg["From"] = email_sender
     msg["To"] = receiver_email
     msg.attach(MIMEText(message, "plain"))
-
+    
     context = ssl.create_default_context()
     server = smtplib.SMTP_SSL(smtp_server, smtp_port, context=context)
     server.login(email_sender, email_password )
@@ -40,20 +41,6 @@ opt.add_argument("--disable-popup-blocking")
 tags = [
     "High School Counselor",
     "high school coach",
-    "High school teacher",
-    "High school advisor",
-    "School Guidance Counselor",
-    "Educational Counselor",
-    "Student Advisor",
-    "Career Guidance Counselor",
-    "Academic Counselor",
-    "College and Career Counselor",
-    "Student Support Specialist",
-    "Admissions Counselor",
-    "School Intervention Counselor",
-    "College Planning Advisor",
-    "Youth Career Coach",
-    "High School Wellness Coordinator",
 ]
 
 
@@ -67,14 +54,23 @@ usa_states = ["Alabama", "Alaska", "Arizona", "Arkansas", "California",  "Colora
     "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia",
     "Wisconsin", "Wyoming",]
 
+EMAIL = ['gmail.com']
+usa_states = ["Tennessee"]
+
 # country = 'in'
 
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=opt)
 
 if not os.path.exists('./csvs'):
     os.mkdir('./csvs')
+
 if not os.path.exists('./logs'):
     os.mkdir('./logs')
+
+DIR = './csvs/' + FOLDER_NAME
+
+if not os.path.exists(DIR):
+    os.mkdir(DIR)
 
 processed = []
 if os.path.exists('./logs/processed.txt'):
@@ -82,13 +78,11 @@ if os.path.exists('./logs/processed.txt'):
         processed = f.read()
         processed = processed.split('\n')
 
-
-
 for TAG in tags:
     if TAG in processed:
         print(f"Processed Already: {TAG}")
         continue
-    for state in usa_states:
+    for state in usa_states: # un comment this lineif not US..!
         for email_domain in EMAIL:
             unique_emails = set()  
             email_df = pd.DataFrame(columns=["State", "Tag", "Name", "Email"])
@@ -96,7 +90,7 @@ for TAG in tags:
             TAG = TAG.replace(' ', '+')
             # driver.get(f'https://www.google.com/search?q=%22{TAG}%22++-intitle%3A%22profiles%22+-inurl%3A%22dir%2F+%22+email%3A+%22%40{email_domain}%22+site%3A{country}.linkedin.com%2Fin%2F+OR+site%3A{country}.linkedin.com%2Fpub%2F&sca_esv=580067936&sxsrf=AM9HkKmtLt0TG_t_ljUJfbHjL7qCuN306g%3A1699350983830&ei=xwlKZYOSMpaHxc8P0KK2iAg&ved=0ahUKEwjDkfXdz7GCAxWWQ_EDHVCRDYEQ4dUDCBA&uact=5&oq=%22Affiliate+Marketing%22++-intitle%3A%22profiles%22+-inurl%3A%22dir%2F+%22+email%3A+%22%40gmail.com%22+site%3A{country}.linkedin.com%2Fin%2F+OR+site%3A{country}.linkedin.com%2Fpub%2F&gs_lp=Egxnd3Mtd2l6LXNlcnAigwEiQWZmaWxpYXRlIE1hcmtldGluZyIgIC1pbnRpdGxlOiJwcm9maWxlcyIgLWludXJsOiJkaXIvICIgZW1haWw6ICJAZ21haWwuY29tIiBzaXRlOnBrLmxpbmtlZGluLmNvbS9pbi8gT1Igc2l0ZTpway5saW5rZWRpbi5jb20vcHViL0gAUABYAHAAeACQAQCYAQCgAQCqAQC4AQPIAQD4AQL4AQHiAwQYACBB&sclient=gws-wiz-serp')
             driver.get(f'https://www.google.com/search?q=%22{TAG}%22+%22{state}%22+-intitle%3A%22profiles%22+-inurl%3A%22dir%2F+%22+email%3A+%22%40{email_domain}%22+site%3Awww.linkedin.com%2Fin%2F+OR+site%3Awww.linkedin.com%2Fpub%2F&sca_esv=586505729&sxsrf=AM9HkKlmM9qSBgg1YHjj51rdhrAohck7Ng%3A1701319445914&ei=FRNoZZC8N5KRkdUP09-d4AU&ved=0ahUKEwjQmuTp9OqCAxWSSKQEHdNvB1wQ4dUDCBA&uact=5&oq=%22Affiliate+Marketing%22+%22United+States%22+-intitle%3A%22profiles%22+-inurl%3A%22dir%2F+%22+email%3A+%22%40gmail.com%22+site%3Awww.linkedin.com%2Fin%2F+OR+site%3Awww.linkedin.com%2Fpub%2F&gs_lp=Egxnd3Mtd2l6LXNlcnAilAEiQWZmaWxpYXRlIE1hcmtldGluZyIgIlVuaXRlZCBTdGF0ZXMiIC1pbnRpdGxlOiJwcm9maWxlcyIgLWludXJsOiJkaXIvICIgZW1haWw6ICJAZ21haWwuY29tIiBzaXRlOnd3dy5saW5rZWRpbi5jb20vaW4vIE9SIHNpdGU6d3d3LmxpbmtlZGluLmNvbS9wdWIvSABQAFgAcAB4AJABAJgBAKABAKoBALgBA8gBAPgBAeIDBBgAIEE&sclient=gws-wiz-serp')
-            time.sleep(random.uniform(12, 30))
+            time.sleep(random.uniform(6, 10))
             scroll_amount = 30
 
             def scroll_down(scroll_amount):
@@ -117,7 +111,7 @@ for TAG in tags:
                 email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
                 return re.findall(email_pattern, text)
 
-            for _ in range(random.randint(25, 30)):
+            for _ in range(random.randint(10, 14)):
                 try:
                     scroll_down(scroll_amount)
                     click_more_results_button()
@@ -155,7 +149,7 @@ for TAG in tags:
                         unique_emails.add(email[0])
                         new_row = pd.DataFrame({"State": [state.upper()], "Tag": [TAG], "Name": [name], "Email": [email[0]]})
                         email_df = pd.concat([email_df, new_row], ignore_index=True)
-            email_df.to_csv(f"./csvs/{state.upper()}_{TAG}_{email_domain}_email_data.csv", index=False)
+            email_df.to_csv(f"{DIR}/{state.upper()}_{TAG}_{email_domain}_email_data.csv", index=False)
     with open('./logs/processed.txt', 'a') as f:
         f.write(f'{TAG}')
 driver.quit()
