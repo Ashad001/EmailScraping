@@ -2,3 +2,5 @@ selenium==4.9.1
 beautifulsoup4==4.12.2
 webdriver_manager==4.0.0
 pandas
+google-auth
+google-api-python-client
