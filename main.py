@@ -39,8 +39,7 @@ opt.add_argument("--disable-popup-blocking")
 
 
 tags = [
-    "High School Counselor",
-    "high school coach",
+    # PUT TAGS YOU WANT TO GET EMAILS OF
 ]
 
 
@@ -53,9 +52,6 @@ usa_states = ["Alabama", "Alaska", "Arizona", "Arkansas", "California",  "Colora
     "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island","South Carolina",
     "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia",
     "Wisconsin", "Wyoming",]
-
-EMAIL = ['gmail.com']
-usa_states = ["Tennessee"]
 
 # country = 'in'
 
@@ -151,5 +147,5 @@ for TAG in tags:
                         email_df = pd.concat([email_df, new_row], ignore_index=True)
             email_df.to_csv(f"{DIR}/{state.upper()}_{TAG}_{email_domain}_email_data.csv", index=False)
     with open('./logs/processed.txt', 'a') as f:
-        f.write(f'{TAG}')
+        f.write(f'{TAG}\n')
 driver.quit()
