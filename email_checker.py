@@ -57,10 +57,10 @@ class EmailProcessor:
                 name = self.remove_emojis(name)
                 if email:
                     email = email.strip()
+                    email = email.lower()
                     if email in self.emails:
                         continue
                     if '@' in email and '.com' in email and  self.is_valid_email(email):
-                        email = email.lower()
                         self.emails.add(email)
                         name = name.strip()
                         if "," in name:

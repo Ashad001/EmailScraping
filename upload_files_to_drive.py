@@ -37,11 +37,12 @@ def upload_csv_files(service, source_folder_path, destination_folder_id):
         query = f"name='{file_name}' and '{subfolder_id}' in parents and trashed=false"
         existing_files = service.files().list(q=query).execute().get('files', [])
 
-        # Check if file is in existing files, if yes, continue to the next file...
-        if file_name in [file['name'] for file in existing_files]:
-            print(f"File already exists: {file_name}")
-            continue
+        # If file already exists, delete it
+        for existing_file in existing_files:
+            service.files().delete(fileId=existing_file['id']).execute()
+            print(f"Deleted existing file: {existing_file['name']}")
 
+        # Upload the new version of the file
         media_body = MediaFileUpload(file_path, mimetype='application/vnd.ms-excel')
         file_metadata = {'name': file_name, 'parents': [subfolder_id]}
 
@@ -51,7 +52,8 @@ def upload_csv_files(service, source_folder_path, destination_folder_id):
         except HttpError as e:
             print(f"Error uploading {file_name}: {e}")
 
-if __name__ == "__main__":
+
+def upload():
     scope = ["https://www.googleapis.com/auth/drive"]
     service_account_json_key = FOLDER_KEY_FILE
     folder_id = FOLDER_ID
@@ -65,3 +67,4 @@ if __name__ == "__main__":
     destination_folder_id = folder_id
 
     upload_csv_files(service, source_folder_path, destination_folder_id)
+
