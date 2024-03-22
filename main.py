@@ -15,7 +15,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import time
 import os
-from CREDS import FOLDER_NAME
+from CREDS import FOLDER_NAME, TAGS, MAIL_TO_SEND
+from email_checker import EmailProcessor
+from combine_csvs import CSVProcessor
 
 def send_email(receiver_email, subject, message):
     smtp_server = "smtp.gmail.com"
@@ -38,10 +40,7 @@ opt = webdriver.ChromeOptions()
 opt.add_argument("--disable-popup-blocking")
 
 
-tags = [
-    # PUT TAGS YOU WANT TO GET EMAILS OF
-]
-
+tags = TAGS
 
 EMAIL = ['gmail.com' ,'outlook.com', 'yahoo.com','hotmail.com']
 
@@ -73,25 +72,29 @@ if os.path.exists('./logs/processed.txt'):
     with open('./logs/processed.txt', 'r') as f:
         processed = f.read()
         processed = processed.split('\n')
+        
+email_checker = EmailProcessor()
+csv_combiner = CSVProcessor()
 
-for TAG in tags:
-    if TAG in processed:
-        print(f"Processed Already: {TAG}")
-        continue
+for tag in tags:
     for state in usa_states: # un comment this lineif not US..!
         for email_domain in EMAIL:
+            tag_check = tag + "_" + email_domain + "_" + state
+            if tag_check in processed:
+                print(f"Processed Already: {tag}")
+                continue
             unique_emails = set()  
             email_df = pd.DataFrame(columns=["State", "Tag", "Name", "Email"])
 
-            TAG = TAG.replace(' ', '+')
-            # driver.get(f'https://www.google.com/search?q=%22{TAG}%22++-intitle%3A%22profiles%22+-inurl%3A%22dir%2F+%22+email%3A+%22%40{email_domain}%22+site%3A{country}.linkedin.com%2Fin%2F+OR+site%3A{country}.linkedin.com%2Fpub%2F&sca_esv=580067936&sxsrf=AM9HkKmtLt0TG_t_ljUJfbHjL7qCuN306g%3A1699350983830&ei=xwlKZYOSMpaHxc8P0KK2iAg&ved=0ahUKEwjDkfXdz7GCAxWWQ_EDHVCRDYEQ4dUDCBA&uact=5&oq=%22Affiliate+Marketing%22++-intitle%3A%22profiles%22+-inurl%3A%22dir%2F+%22+email%3A+%22%40gmail.com%22+site%3A{country}.linkedin.com%2Fin%2F+OR+site%3A{country}.linkedin.com%2Fpub%2F&gs_lp=Egxnd3Mtd2l6LXNlcnAigwEiQWZmaWxpYXRlIE1hcmtldGluZyIgIC1pbnRpdGxlOiJwcm9maWxlcyIgLWludXJsOiJkaXIvICIgZW1haWw6ICJAZ21haWwuY29tIiBzaXRlOnBrLmxpbmtlZGluLmNvbS9pbi8gT1Igc2l0ZTpway5saW5rZWRpbi5jb20vcHViL0gAUABYAHAAeACQAQCYAQCgAQCqAQC4AQPIAQD4AQL4AQHiAwQYACBB&sclient=gws-wiz-serp')
-            driver.get(f'https://www.google.com/search?q=%22{TAG}%22+%22{state}%22+-intitle%3A%22profiles%22+-inurl%3A%22dir%2F+%22+email%3A+%22%40{email_domain}%22+site%3Awww.linkedin.com%2Fin%2F+OR+site%3Awww.linkedin.com%2Fpub%2F&sca_esv=586505729&sxsrf=AM9HkKlmM9qSBgg1YHjj51rdhrAohck7Ng%3A1701319445914&ei=FRNoZZC8N5KRkdUP09-d4AU&ved=0ahUKEwjQmuTp9OqCAxWSSKQEHdNvB1wQ4dUDCBA&uact=5&oq=%22Affiliate+Marketing%22+%22United+States%22+-intitle%3A%22profiles%22+-inurl%3A%22dir%2F+%22+email%3A+%22%40gmail.com%22+site%3Awww.linkedin.com%2Fin%2F+OR+site%3Awww.linkedin.com%2Fpub%2F&gs_lp=Egxnd3Mtd2l6LXNlcnAilAEiQWZmaWxpYXRlIE1hcmtldGluZyIgIlVuaXRlZCBTdGF0ZXMiIC1pbnRpdGxlOiJwcm9maWxlcyIgLWludXJsOiJkaXIvICIgZW1haWw6ICJAZ21haWwuY29tIiBzaXRlOnd3dy5saW5rZWRpbi5jb20vaW4vIE9SIHNpdGU6d3d3LmxpbmtlZGluLmNvbS9wdWIvSABQAFgAcAB4AJABAJgBAKABAKoBALgBA8gBAPgBAeIDBBgAIEE&sclient=gws-wiz-serp')
-            time.sleep(random.uniform(6, 10))
+            tag = tag.replace(' ', '+')
+            # driver.get(f'https://www.google.com/search?q=%22{tag}%22++-intitle%3A%22profiles%22+-inurl%3A%22dir%2F+%22+email%3A+%22%40{email_domain}%22+site%3A{country}.linkedin.com%2Fin%2F+OR+site%3A{country}.linkedin.com%2Fpub%2F&sca_esv=580067936&sxsrf=AM9HkKmtLt0TG_t_ljUJfbHjL7qCuN306g%3A1699350983830&ei=xwlKZYOSMpaHxc8P0KK2iAg&ved=0ahUKEwjDkfXdz7GCAxWWQ_EDHVCRDYEQ4dUDCBA&uact=5&oq=%22Affiliate+Marketing%22++-intitle%3A%22profiles%22+-inurl%3A%22dir%2F+%22+email%3A+%22%40gmail.com%22+site%3A{country}.linkedin.com%2Fin%2F+OR+site%3A{country}.linkedin.com%2Fpub%2F&gs_lp=Egxnd3Mtd2l6LXNlcnAigwEiQWZmaWxpYXRlIE1hcmtldGluZyIgIC1pbnRpdGxlOiJwcm9maWxlcyIgLWludXJsOiJkaXIvICIgZW1haWw6ICJAZ21haWwuY29tIiBzaXRlOnBrLmxpbmtlZGluLmNvbS9pbi8gT1Igc2l0ZTpway5saW5rZWRpbi5jb20vcHViL0gAUABYAHAAeACQAQCYAQCgAQCqAQC4AQPIAQD4AQL4AQHiAwQYACBB&sclient=gws-wiz-serp')
+            driver.get(f'https://www.google.com/search?q=%22{tag}%22+%22{state}%22+-intitle%3A%22profiles%22+-inurl%3A%22dir%2F+%22+email%3A+%22%40{email_domain}%22+site%3Awww.linkedin.com%2Fin%2F+OR+site%3Awww.linkedin.com%2Fpub%2F&sca_esv=586505729&sxsrf=AM9HkKlmM9qSBgg1YHjj51rdhrAohck7Ng%3A1701319445914&ei=FRNoZZC8N5KRkdUP09-d4AU&ved=0ahUKEwjQmuTp9OqCAxWSSKQEHdNvB1wQ4dUDCBA&uact=5&oq=%22Affiliate+Marketing%22+%22United+States%22+-intitle%3A%22profiles%22+-inurl%3A%22dir%2F+%22+email%3A+%22%40gmail.com%22+site%3Awww.linkedin.com%2Fin%2F+OR+site%3Awww.linkedin.com%2Fpub%2F&gs_lp=Egxnd3Mtd2l6LXNlcnAilAEiQWZmaWxpYXRlIE1hcmtldGluZyIgIlVuaXRlZCBTdGF0ZXMiIC1pbnRpdGxlOiJwcm9maWxlcyIgLWludXJsOiJkaXIvICIgZW1haWw6ICJAZ21haWwuY29tIiBzaXRlOnd3dy5saW5rZWRpbi5jb20vaW4vIE9SIHNpdGU6d3d3LmxpbmtlZGluLmNvbS9wdWIvSABQAFgAcAB4AJABAJgBAKABAKoBALgBA8gBAPgBAeIDBBgAIEE&sclient=gws-wiz-serp')
+            time.sleep(random.randint(2, 5))
             scroll_amount = 30
 
             def scroll_down(scroll_amount):
                 driver.execute_script("window.scrollBy(0, window.innerHeight);")
-                time.sleep(random.uniform(2, 9))
+                time.sleep(random.randint(2, 6))
 
             def click_more_results_button():
                 try:
@@ -121,15 +124,15 @@ for TAG in tags:
             if captcha_present:
                 subject = "Captcha Detected!"
                 body = "Captcha detected on the website. Please check and solve it manually."
-                send_email("ashad001sp@gmail.com", subject, body)
+                send_email(MAIL_TO_SEND, subject, body)
                 with open('captchas_file.txt', 'a', encoding='utf-8') as f:
                     time_detected = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-                    f.write(f"{time_detected}, {TAG}, {state}, {email_domain}\n")
+                    f.write(f"{time_detected}, {tag}, {state}, {email_domain}\n")
                 exit(0)
 
             soup = BeautifulSoup(page_source, 'html.parser')
             elements = soup.find_all(class_="MjjYud")
-            TAG = TAG.replace('+', ' ')
+            tag = tag.replace('+', ' ')
             for element in elements:
                 block = element.get_text()
                 name = block.split(' - ')[0]
@@ -143,9 +146,12 @@ for TAG in tags:
                 if name != "" and email != []:
                     if email[0] not in unique_emails:
                         unique_emails.add(email[0])
-                        new_row = pd.DataFrame({"State": [state.upper()], "Tag": [TAG], "Name": [name], "Email": [email[0]]})
+                        new_row = pd.DataFrame({"State": [state.upper()], "Tag": [tag], "Name": [name], "Email": [email[0]]})
                         email_df = pd.concat([email_df, new_row], ignore_index=True)
-            email_df.to_csv(f"{DIR}/{state.upper()}_{TAG}_{email_domain}_email_data.csv", index=False)
-    with open('./logs/processed.txt', 'a') as f:
-        f.write(f'{TAG}\n')
+            email_df.to_csv(f"{DIR}/{state.upper()}_{tag}_{email_domain}_email_data.csv", index=False)
+            with open('./logs/processed.txt', 'a') as f:
+                f.write(f'{tag_check}\n')
+        csv_combiner.combine_csvs()
+        csv_combiner.save_combined_csv()
+        email_checker.process_and_save_emails()
 driver.quit()

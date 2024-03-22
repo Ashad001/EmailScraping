@@ -4,13 +4,26 @@ import os
 from CREDS import FOLDER_NAME
 
 class EmailProcessor:
-    def __init__(self, input_file_path, valid_output_file_path, invalid_output_file_path):
-        self.input_file_path = input_file_path
-        self.valid_output_file_path = valid_output_file_path
-        self.invalid_output_file_path = invalid_output_file_path
+    def __init__(self):
+ 
         self.emails = set()
         self.valid_rows = []
         self.invalid_rows = []
+        
+        if not os.path.exists("combined_csvs"):
+            os.makedirs("combined_csvs")
+        
+        if not os.path.exists("valid_csvs"):
+            os.makedirs("valid_csvs")
+            
+        if not os.path.exists("invalid_csvs"):
+            os.makedirs("invalid_csvs")  
+              
+        DIR = "./combined_csvs/" + FOLDER_NAME
+        
+        self.input_file_path = "./combined_csvs/" + FOLDER_NAME + '/combined_email_data.csv'
+        self.valid_output_file_path = "./valid_csvs/" + f'/{FOLDER_NAME}_valid_emails.csv'
+        self.invalid_output_file_path = "./invalid_csvs/" + f'/{FOLDER_NAME}_invalid_emails.csv'
 
     def is_valid_email(self, email):
         email_pattern = r'^[a-zA-Z0-9._%+-]{3,}@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$'
@@ -71,25 +84,11 @@ class EmailProcessor:
         self.process_emails()
         self.save_emails_to_file(self.valid_rows, self.valid_output_file_path)
         self.save_emails_to_file(self.invalid_rows, self.invalid_output_file_path)
+        
+        print(f"Valid emails are saved in '{self.valid_output_file_path}'")
+        print(f"Invalid emails are saved in '{self.invalid_output_file_path}'")
 
 if __name__ == '__main__':
     
-    if not os.path.exists("combined_csvs"):
-        os.makedirs("combined_csvs")
-    
-    if not os.path.exists("valid_csvs"):
-        os.makedirs("valid_csvs")
-        
-    if not os.path.exists("invalid_csvs"):
-        os.makedirs("invalid_csvs")    
-    DIR = "./combined_csvs/" + FOLDER_NAME
-    
-    input_file = "./combined_csvs/" + FOLDER_NAME + '/combined_email_data.csv'
-    valid_output_file = "./valid_csvs/" + f'/{FOLDER_NAME}_valid_emails.csv'
-    invalid_output_file = "./invalid_csvs/" + f'/{FOLDER_NAME}_invalid_emails.csv'
-
-    processor = EmailProcessor(input_file, valid_output_file, invalid_output_file)
+    processor = EmailProcessor()
     processor.process_and_save_emails()
-
-    print(f"Valid emails are saved in '{valid_output_file}'")
-    print(f"Invalid emails are saved in '{invalid_output_file}'")
