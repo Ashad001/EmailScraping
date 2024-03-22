@@ -39,8 +39,9 @@ def upload_csv_files(service, source_folder_path, destination_folder_id):
 
         # If file already exists, delete it
         for existing_file in existing_files:
-            service.files().delete(fileId=existing_file['id']).execute()
-            print(f"Deleted existing file: {existing_file['name']}")
+            if existing_file['name'] in file_name:
+                service.files().delete(fileId=existing_file['id']).execute()
+                print(f"Deleted existing file: {existing_file['name']}")
 
         # Upload the new version of the file
         media_body = MediaFileUpload(file_path, mimetype='application/vnd.ms-excel')
