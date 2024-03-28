@@ -46,9 +46,6 @@ Thumbs.db
 # Visual Studio Code settings
 .vscode/
 
-# private files
-CREDS.py 
-
 
 # private folders
 combined_csvs/

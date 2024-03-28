@@ -15,7 +15,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import time
 import os
-from CREDS import FOLDER_NAME, TAGS, MAIL_TO_SEND
+from CREDS import FOLDER_NAME, TAGS, MAIL_TO_SEND, FOLDER_ID, MAIL_FROM, MAIL_PASS
 from email_checker import EmailProcessor
 from combine_csvs import CSVProcessor
 from upload_files_to_drive import upload
@@ -162,8 +162,8 @@ for tag in tags:
             csv_combiner.combine_csvs()
             csv_combiner.save_combined_csv()
             email_checker.process_and_save_emails()
-    # if check_flag:
-    #     upload()
+    if check_flag and FOLDER_ID != "":
+        upload()
 driver.quit()
 
 subject = "Email Scraping Completed!"
