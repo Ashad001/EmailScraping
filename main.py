@@ -23,8 +23,8 @@ from upload_files_to_drive import upload
 def send_email(receiver_email, subject, message):
     smtp_server = "smtp.gmail.com"
     smtp_port = 465
-    email_sender = 'ashadq345@gmail.com'
-    email_password = 'ifmlgrerqieqrlaf'
+    email_sender = MAIL_FROM
+    email_password = MAIL_PASS
     msg = MIMEMultipart()
     msg["Subject"] = subject
     msg["From"] = email_sender
@@ -54,8 +54,6 @@ usa_states = ["Alabama", "Alaska", "Arizona", "Arkansas", "California",  "Colora
     "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia",
     "Wisconsin", "Wyoming",]
 
-EMAIL = ['gmail.com', 'outlook.com']
-usa_states = ['Alabama']
 # country = 'in'
 
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=opt)
@@ -77,12 +75,13 @@ if os.path.exists('./logs/processed.txt'):
         processed = f.read()
         processed = processed.split('\n')
         processed = [x.strip() for x in processed if x.strip() != '']
+        
 email_checker = EmailProcessor()
 csv_combiner = CSVProcessor()
 
 check_flag = False
 for tag in tags:
-    for state in usa_states: # un comment this lineif not US..!
+    for state in usa_states: # comment this line if not US..!
         for email_domain in EMAIL:
             tag_check = tag + "_" + email_domain + "_" + state
             if tag_check in processed:
@@ -93,7 +92,11 @@ for tag in tags:
             email_df = pd.DataFrame(columns=["State", "Tag", "Name", "Email"])
 
             tag = tag.replace(' ', '+')
+            
+            # FOR COUNTRIES EXCEPT US
             # driver.get(f'https://www.google.com/search?q=%22{tag}%22++-intitle%3A%22profiles%22+-inurl%3A%22dir%2F+%22+email%3A+%22%40{email_domain}%22+site%3A{country}.linkedin.com%2Fin%2F+OR+site%3A{country}.linkedin.com%2Fpub%2F&sca_esv=580067936&sxsrf=AM9HkKmtLt0TG_t_ljUJfbHjL7qCuN306g%3A1699350983830&ei=xwlKZYOSMpaHxc8P0KK2iAg&ved=0ahUKEwjDkfXdz7GCAxWWQ_EDHVCRDYEQ4dUDCBA&uact=5&oq=%22Affiliate+Marketing%22++-intitle%3A%22profiles%22+-inurl%3A%22dir%2F+%22+email%3A+%22%40gmail.com%22+site%3A{country}.linkedin.com%2Fin%2F+OR+site%3A{country}.linkedin.com%2Fpub%2F&gs_lp=Egxnd3Mtd2l6LXNlcnAigwEiQWZmaWxpYXRlIE1hcmtldGluZyIgIC1pbnRpdGxlOiJwcm9maWxlcyIgLWludXJsOiJkaXIvICIgZW1haWw6ICJAZ21haWwuY29tIiBzaXRlOnBrLmxpbmtlZGluLmNvbS9pbi8gT1Igc2l0ZTpway5saW5rZWRpbi5jb20vcHViL0gAUABYAHAAeACQAQCYAQCgAQCqAQC4AQPIAQD4AQL4AQHiAwQYACBB&sclient=gws-wiz-serp')
+            
+            # FOR US (State Wise Search)
             driver.get(f'https://www.google.com/search?q=%22{tag}%22+%22{state}%22+-intitle%3A%22profiles%22+-inurl%3A%22dir%2F+%22+email%3A+%22%40{email_domain}%22+site%3Awww.linkedin.com%2Fin%2F+OR+site%3Awww.linkedin.com%2Fpub%2F&sca_esv=586505729&sxsrf=AM9HkKlmM9qSBgg1YHjj51rdhrAohck7Ng%3A1701319445914&ei=FRNoZZC8N5KRkdUP09-d4AU&ved=0ahUKEwjQmuTp9OqCAxWSSKQEHdNvB1wQ4dUDCBA&uact=5&oq=%22Affiliate+Marketing%22+%22United+States%22+-intitle%3A%22profiles%22+-inurl%3A%22dir%2F+%22+email%3A+%22%40gmail.com%22+site%3Awww.linkedin.com%2Fin%2F+OR+site%3Awww.linkedin.com%2Fpub%2F&gs_lp=Egxnd3Mtd2l6LXNlcnAilAEiQWZmaWxpYXRlIE1hcmtldGluZyIgIlVuaXRlZCBTdGF0ZXMiIC1pbnRpdGxlOiJwcm9maWxlcyIgLWludXJsOiJkaXIvICIgZW1haWw6ICJAZ21haWwuY29tIiBzaXRlOnd3dy5saW5rZWRpbi5jb20vaW4vIE9SIHNpdGU6d3d3LmxpbmtlZGluLmNvbS9wdWIvSABQAFgAcAB4AJABAJgBAKABAKoBALgBA8gBAPgBAeIDBBgAIEE&sclient=gws-wiz-serp')
             time.sleep(random.randint(10, 25))
             scroll_amount = 30
@@ -125,7 +128,6 @@ for tag in tags:
                 with open('./logs/captchas_file.txt', 'a', encoding='utf-8') as f:
                     time_detected = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                     f.write(f"{time_detected}, {tag}, {state}, {email_domain}\n")
-                continue
 
             for _ in range(random.randint(25, 35)):
                 try:
@@ -134,7 +136,9 @@ for tag in tags:
                 except Exception as e:
                     print(e)
                     continue
-
+            
+            if captcha_present:
+                continue
             
                 
             soup = BeautifulSoup(page_source, 'html.parser')
@@ -164,6 +168,7 @@ for tag in tags:
             email_checker.process_and_save_emails()
     if check_flag and FOLDER_ID != "":
         upload()
+        
 driver.quit()
 
 subject = "Email Scraping Completed!"

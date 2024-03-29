@@ -46,6 +46,7 @@ Thumbs.db
 # Visual Studio Code settings
 .vscode/
 
+CREDS-prv.py
 
 # private folders
 combined_csvs/
@@ -54,4 +55,4 @@ invalid_csvs/
 valid_csvs/
 csvs/
 logs/
-driveconnecterapp-93a42bc009a2.json
+driveconnecterapp.json
